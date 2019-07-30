@@ -4,12 +4,8 @@
     "Compile": "truffle compile",
     "Migrate": "truffle migrate",
     "Console": "truffle console"
-    // "Test contracts": "truffle test",
-    // "Test dapp": "cd client && npm test",
-    // "Run dev server": "cd client && npm run start",
-    // "Build for production": "cd client && npm run build"
+  },
+  "hooks": {
+    "post-unpack": "npm install"
   }
-  // "hooks": {
-  //   "post-unpack": "cd client && npm install"
-  // }
 }
