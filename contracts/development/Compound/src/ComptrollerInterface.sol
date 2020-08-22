@@ -1,6 +1,8 @@
+// Copyright 2020 Compound Labs, Inc.
 // File: contracts/ComptrollerInterface.sol
 
-pragma solidity ^0.5.8;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.6.12;
 
 interface ComptrollerInterface {
     /**

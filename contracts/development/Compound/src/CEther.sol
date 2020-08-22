@@ -1,4 +1,5 @@
-pragma solidity ^0.5.8;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.6.12;
 
 import "./ComptrollerInterface.sol";
 import "./CToken.sol";
@@ -92,7 +93,8 @@ contract CEther is CToken {
     /**
      * @notice Send Ether to CEther to mint
      */
-    function () external payable {
+    fallback() external {}
+    receive() external payable {
         requireNoError(mintInternal(msg.value), "mint failed");
     }
 
@@ -103,7 +105,7 @@ contract CEther is CToken {
      * @dev This excludes the value of the current message, if any
      * @return The quantity of Ether owned by this contract
      */
-    function getCashPrior() internal view returns (uint) {
+    function getCashPrior() internal view override returns (uint) {
         (MathError err, uint startingBalance) = subUInt(address(this).balance, msg.value);
         require(err == MathError.NO_ERROR);
         return startingBalance;
@@ -116,7 +118,7 @@ contract CEther is CToken {
      * @param amount Amount of Ether being sent
      * @return Whether or not the transfer checks out
      */
-    function checkTransferIn(address from, uint amount) internal view returns (Error) {
+    function checkTransferIn(address from, uint amount) internal view override returns (Error) {
         // Sanity checks
         require(msg.sender == from, "sender mismatch");
         require(msg.value == amount, "value mismatch");
@@ -129,14 +131,14 @@ contract CEther is CToken {
      * @param amount Amount of Ether being sent
      * @return Success
      */
-    function doTransferIn(address from, uint amount) internal returns (Error) {
+    function doTransferIn(address from, uint amount) internal override returns (Error) {
         // Sanity checks
         require(msg.sender == from, "sender mismatch");
         require(msg.value == amount, "value mismatch");
         return Error.NO_ERROR;
     }
 
-    function doTransferOut(address payable to, uint amount) internal returns (Error) {
+    function doTransferOut(address payable to, uint amount) internal override returns (Error) {
         /* Send the Ether, with minimal gas and revert on failure */
         to.transfer(amount);
         return Error.NO_ERROR;
