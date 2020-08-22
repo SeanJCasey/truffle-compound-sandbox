@@ -1,6 +1,7 @@
 // File: contracts/CToken.sol
 
-pragma solidity ^0.5.8;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.6.12;
 
 import "./ComptrollerInterface.sol";
 import "./EIP20Interface.sol";
@@ -14,7 +15,7 @@ import "./ReentrancyGuard.sol";
  * @notice Abstract base for CTokens
  * @author Compound
  */
-contract CToken is EIP20Interface, Exponential, TokenErrorReporter, ReentrancyGuard {
+abstract contract CToken is EIP20Interface, Exponential, TokenErrorReporter, ReentrancyGuard {
     /**
      * @notice Indicator that this is a CToken contract (for inspection)
      */
@@ -98,7 +99,7 @@ contract CToken is EIP20Interface, Exponential, TokenErrorReporter, ReentrancyGu
     /**
      * @notice Total number of tokens in circulation
      */
-    uint256 public totalSupply;
+    uint256 public override totalSupply;
 
     /**
      * @notice Official record of token balances for each account
@@ -308,7 +309,7 @@ contract CToken is EIP20Interface, Exponential, TokenErrorReporter, ReentrancyGu
      * @param amount The number of tokens to transfer
      * @return Whether or not the transfer succeeded
      */
-    function transfer(address dst, uint256 amount) external nonReentrant returns (bool) {
+    function transfer(address dst, uint256 amount) external nonReentrant override returns (bool) {
         return transferTokens(msg.sender, msg.sender, dst, amount) == uint(Error.NO_ERROR);
     }
 
@@ -319,7 +320,7 @@ contract CToken is EIP20Interface, Exponential, TokenErrorReporter, ReentrancyGu
      * @param amount The number of tokens to transfer
      * @return Whether or not the transfer succeeded
      */
-    function transferFrom(address src, address dst, uint256 amount) external nonReentrant returns (bool) {
+    function transferFrom(address src, address dst, uint256 amount) external nonReentrant override returns (bool) {
         return transferTokens(msg.sender, src, dst, amount) == uint(Error.NO_ERROR);
     }
 
@@ -331,7 +332,7 @@ contract CToken is EIP20Interface, Exponential, TokenErrorReporter, ReentrancyGu
      * @param amount The number of tokens that are approved (-1 means infinite)
      * @return Whether or not the approval succeeded
      */
-    function approve(address spender, uint256 amount) external returns (bool) {
+    function approve(address spender, uint256 amount) external override returns (bool) {
         address src = msg.sender;
         transferAllowances[src][spender] = amount;
         emit Approval(src, spender, amount);
@@ -344,7 +345,7 @@ contract CToken is EIP20Interface, Exponential, TokenErrorReporter, ReentrancyGu
      * @param spender The address of the account which may transfer tokens
      * @return The number of tokens allowed to be spent (-1 means infinite)
      */
-    function allowance(address owner, address spender) external view returns (uint256) {
+    function allowance(address owner, address spender) external view override returns (uint256) {
         return transferAllowances[owner][spender];
     }
 
@@ -353,7 +354,7 @@ contract CToken is EIP20Interface, Exponential, TokenErrorReporter, ReentrancyGu
      * @param owner The address of the account to query
      * @return The number of tokens owned by `owner`
      */
-    function balanceOf(address owner) external view returns (uint256) {
+    function balanceOf(address owner) external view override returns (uint256) {
         return accountTokens[owner];
     }
 
@@ -513,7 +514,7 @@ contract CToken is EIP20Interface, Exponential, TokenErrorReporter, ReentrancyGu
 
     /**
      * @notice Accrue interest then return the up-to-date exchange rate
-     * @return Calculated exchange rate scaled by 1e18
+     * @return uint Calculated exchange rate scaled by 1e18
      */
     function exchangeRateCurrent() public nonReentrant returns (uint) {
         require(accrueInterest() == uint(Error.NO_ERROR), "accrue interest failed");
@@ -1549,25 +1550,25 @@ contract CToken is EIP20Interface, Exponential, TokenErrorReporter, ReentrancyGu
      * @dev This excludes the value of the current message, if any
      * @return The quantity of underlying owned by this contract
      */
-    function getCashPrior() internal view returns (uint);
+    function getCashPrior() internal view virtual returns (uint);
 
     /**
      * @dev Checks whether or not there is sufficient allowance for this contract to move amount from `from` and
      *      whether or not `from` has a balance of at least `amount`. Does NOT do a transfer.
      */
-    function checkTransferIn(address from, uint amount) internal view returns (Error);
+    function checkTransferIn(address from, uint amount) internal view virtual returns (Error);
 
     /**
      * @dev Performs a transfer in, ideally returning an explanatory error code upon failure rather than reverting.
      *  If caller has not called `checkTransferIn`, this may revert due to insufficient balance or insufficient allowance.
      *  If caller has called `checkTransferIn` successfully, this should not revert in normal conditions.
      */
-    function doTransferIn(address from, uint amount) internal returns (Error);
+    function doTransferIn(address from, uint amount) internal virtual returns (Error);
 
     /**
      * @dev Performs a transfer out, ideally returning an explanatory error code upon failure tather than reverting.
      *  If caller has not called checked protocol's balance, may revert due to insufficient cash held in the contract.
      *  If caller has checked protocol's balance, and verified it is >= amount, this should not revert in normal conditions.
      */
-    function doTransferOut(address payable to, uint amount) internal returns (Error);
+    function doTransferOut(address payable to, uint amount) internal virtual returns (Error);
 }

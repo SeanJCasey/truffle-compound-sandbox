@@ -1,6 +1,7 @@
 // File: contracts/WhitePaperInterestRateModel.sol
 
-pragma solidity ^0.5.8;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.6.12;
 
 import "./Exponential.sol";
 import "./InterestRateModel.sol";
@@ -14,7 +15,7 @@ contract WhitePaperInterestRateModel is InterestRateModel, Exponential {
     /**
      * @notice Indicator that this is an InterestRateModel contract (for inspection)
      */
-    bool public constant isInterestRateModel = true;
+    bool public constant override isInterestRateModel = true;
 
     /**
      * @notice The multiplier of utilization rate that gives the slope of the interest rate
@@ -114,7 +115,7 @@ contract WhitePaperInterestRateModel is InterestRateModel, Exponential {
       * @param _reserves The total reserves of the underlying asset in the CToken
       * @return Success or failure and the borrow interest rate per block scaled by 10e18
       */
-    function getBorrowRate(uint cash, uint borrows, uint _reserves) public view returns (uint, uint) {
+    function getBorrowRate(uint cash, uint borrows, uint _reserves) public view override returns (uint, uint) {
         _reserves; // pragma ignore unused argument
 
         (IRError err0, Exp memory _utilizationRate, Exp memory annualBorrowRate) = getUtilizationAndAnnualBorrowRate(cash, borrows);

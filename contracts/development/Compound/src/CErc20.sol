@@ -1,6 +1,7 @@
 // File: contracts/CErc20.sol
 
-pragma solidity ^0.5.8;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.6.12;
 
 import "./ComptrollerInterface.sol";
 import "./CToken.sol";
@@ -122,7 +123,7 @@ contract CErc20 is CToken {
      * @dev This excludes the value of the current message, if any
      * @return The quantity of underlying tokens owned by this contract
      */
-    function getCashPrior() internal view returns (uint) {
+    function getCashPrior() internal view override returns (uint) {
         EIP20Interface token = EIP20Interface(underlying);
         return token.balanceOf(address(this));
     }
@@ -131,7 +132,7 @@ contract CErc20 is CToken {
      * @dev Checks whether or not there is sufficient allowance for this contract to move amount from `from` and
      *      whether or not `from` has a balance of at least `amount`. Does NOT do a transfer.
      */
-    function checkTransferIn(address from, uint amount) internal view returns (Error) {
+    function checkTransferIn(address from, uint amount) internal view override returns (Error) {
         EIP20Interface token = EIP20Interface(underlying);
 
         if (token.allowance(from, address(this)) < amount) {
@@ -154,7 +155,7 @@ contract CErc20 is CToken {
      *      Note: This wrapper safely handles non-standard ERC-20 tokens that do not return a value.
      *            See here: https://medium.com/coinmonks/missing-return-value-bug-at-least-130-tokens-affected-d67bf08521ca
      */
-    function doTransferIn(address from, uint amount) internal returns (Error) {
+    function doTransferIn(address from, uint amount) internal override returns (Error) {
         EIP20NonStandardInterface token = EIP20NonStandardInterface(underlying);
         bool result;
 
@@ -191,7 +192,7 @@ contract CErc20 is CToken {
      *      Note: This wrapper safely handles non-standard ERC-20 tokens that do not return a value.
      *            See here: https://medium.com/coinmonks/missing-return-value-bug-at-least-130-tokens-affected-d67bf08521ca
      */
-    function doTransferOut(address payable to, uint amount) internal returns (Error) {
+    function doTransferOut(address payable to, uint amount) internal override returns (Error) {
         EIP20NonStandardInterface token = EIP20NonStandardInterface(underlying);
         bool result;
 

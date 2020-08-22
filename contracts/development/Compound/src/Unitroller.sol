@@ -1,6 +1,7 @@
 // File: contracts/Unitroller.sol
 
-pragma solidity ^0.5.8;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.6.12;
 
 import "./ErrorReporter.sol";
 import "./ComptrollerStorage.sol";
@@ -138,18 +139,19 @@ contract Unitroller is UnitrollerAdminStorage, ComptrollerErrorReporter {
      * It returns to the external caller whatever the implementation returns
      * or forwards reverts.
      */
-    function () payable external {
+    fallback() external {}
+    receive() payable external {
         // delegate all other functions to current implementation
         (bool success, ) = comptrollerImplementation.delegatecall(msg.data);
 
         // solium-disable-next-line security/no-inline-assembly
         assembly {
               let free_mem_ptr := mload(0x40)
-              returndatacopy(free_mem_ptr, 0, returndatasize)
+              returndatacopy(free_mem_ptr, 0, returndatasize())
 
               switch success
-              case 0 { revert(free_mem_ptr, returndatasize) }
-              default { return(free_mem_ptr, returndatasize) }
+              case 0 { revert(free_mem_ptr, returndatasize()) }
+              default { return(free_mem_ptr, returndatasize()) }
         }
     }
 }
