@@ -1,3 +1,4 @@
+// Copyright 2020 Compound Labs, Inc.
 // File: contracts/ComptrollerStorage.sol
 
 // SPDX-License-Identifier: MIT

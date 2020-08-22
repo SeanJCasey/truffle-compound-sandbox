@@ -1,3 +1,4 @@
+// Copyright 2020 Compound Labs, Inc.
 // File: contracts/EIP20NonStandardInterface.sol
 
 // SPDX-License-Identifier: MIT

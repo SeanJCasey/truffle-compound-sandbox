@@ -1,3 +1,4 @@
+// Copyright 2020 Compound Labs, Inc.
 // File: contracts/CErc20.sol
 
 // SPDX-License-Identifier: MIT

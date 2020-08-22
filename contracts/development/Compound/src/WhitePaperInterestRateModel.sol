@@ -1,3 +1,4 @@
+// Copyright 2020 Compound Labs, Inc.
 // File: contracts/WhitePaperInterestRateModel.sol
 
 // SPDX-License-Identifier: MIT
