@@ -1,9 +1,9 @@
-const FakeDai = artifacts.require("./FakeDai");
-const FakeCDai = artifacts.require("./FakeCDai");
-const FakeCEther = artifacts.require("./FakeCEther");
-const FakeComptroller = artifacts.require("./FakeComptroller");
-const FakeCDaiInterestRateModel = artifacts.require("./FakeCDaiInterestRateModel");
-const FakeCEtherInterestRateModel = artifacts.require("./FakeCEtherInterestRateModel");
+const FakeDai = artifacts.require("FakeDai");
+const FakeCDai = artifacts.require("FakeCDai");
+const FakeCEther = artifacts.require("FakeCEther");
+const FakeComptroller = artifacts.require("FakeComptroller");
+const FakeCDaiInterestRateModel = artifacts.require("FakeCDaiInterestRateModel");
+const FakeCEtherInterestRateModel = artifacts.require("FakeCEtherInterestRateModel");
 
 
 module.exports = async (deployer, network) => {
